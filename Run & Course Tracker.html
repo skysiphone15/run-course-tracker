@@ -1,0 +1,162 @@
+<div id="fitnessTracker" style="min-height:100%;background-color:light-dark(#f5f5f2,#111);color:light-dark(#171717,#f5f5f5);padding:24px;font-family:system-ui,sans-serif">
+  <div style="max-width:760px;margin:auto">
+    <div id="activeTimerBanner" aria-live="polite" style="display:none;margin-bottom:18px;padding:16px 18px;border-radius:16px;background:light-dark(#fff3cd,#3a2f0a);border:1px solid light-dark(#e2c66b,#6d581c);font-weight:800;font-size:18px"></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px">
+      <section style="background:light-dark(#fff,#1d1d1d);border-radius:20px;padding:22px;border:1px solid light-dark(#ddd,#333)">
+        <div style="font-size:14px;opacity:.65;font-weight:700;text-transform:uppercase;letter-spacing:.08em">744 ft run</div>
+        <div id="runTime" style="font-size:48px;font-weight:800;font-variant-numeric:tabular-nums;margin:12px 0">00:00.00</div>
+        <button id="runBtn" type="button" style="width:100%;min-height:64px;border:0;border-radius:16px;background:#287a43;color:white;font-size:21px;font-weight:800;cursor:pointer">START RUN</button>
+      </section>
+      <section style="background:light-dark(#fff,#1d1d1d);border-radius:20px;padding:22px;border:1px solid light-dark(#ddd,#333)">
+        <div style="font-size:14px;opacity:.65;font-weight:700;text-transform:uppercase;letter-spacing:.08em">Basketball course</div>
+        <div id="courseTime" style="font-size:48px;font-weight:800;font-variant-numeric:tabular-nums;margin:12px 0">00:00.00</div>
+        <button id="courseBtn" type="button" style="width:100%;min-height:64px;border:0;border-radius:16px;background:#275da8;color:white;font-size:21px;font-weight:800;cursor:pointer">START COURSE</button>
+      </section>
+    </div>
+
+    <section style="margin-top:20px;background:light-dark(#fff,#1d1d1d);border-radius:20px;padding:20px;border:1px solid light-dark(#ddd,#333)">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center">
+        <div><div style="font-size:12px;opacity:.6">RUNS</div><strong id="runCount" style="font-size:28px">0</strong></div>
+        <div><div style="font-size:12px;opacity:.6">DISTANCE</div><strong id="distance" style="font-size:28px">0 ft</strong></div>
+        <div><div style="font-size:12px;opacity:.6">COURSES</div><strong id="courseCount" style="font-size:28px">0</strong></div>
+      </div>
+    </section>
+
+    <section style="margin-top:20px;background:light-dark(#fff,#1d1d1d);border-radius:20px;padding:20px;border:1px solid light-dark(#ddd,#333)">
+      <strong>Today's conditions</strong>
+      <div style="font-size:13px;opacity:.6;margin-top:4px">Moon phase is calculated automatically from today's date. Save a workout location now so automatic live weather can be connected in the standalone phone version.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-top:16px">
+        <label style="display:grid;gap:6px;font-size:13px"><span>Workout location</span><input id="locationInput" type="text" placeholder="Example: Huntsville, AL" style="min-height:46px;border-radius:12px;border:1px solid light-dark(#ccc,#444);background:transparent;color:inherit;padding:0 12px;font-size:16px"></label>
+        <label style="display:grid;gap:6px;font-size:13px"><span>Temperature °F</span><input id="temperatureInput" type="number" inputmode="decimal" placeholder="89" style="min-height:46px;border-radius:12px;border:1px solid light-dark(#ccc,#444);background:transparent;color:inherit;padding:0 12px;font-size:16px"></label>
+        <label style="display:grid;gap:6px;font-size:13px"><span>Weather</span><select id="weatherInput" style="min-height:46px;border-radius:12px;border:1px solid light-dark(#ccc,#444);background:light-dark(#fff,#1d1d1d);color:inherit;padding:0 12px;font-size:16px"><option>Sunny</option><option>Partly cloudy</option><option>Cloudy</option><option>Rain</option><option>Windy</option><option>Other</option></select></label>
+        <label style="display:grid;gap:6px;font-size:13px"><span>Moon phase</span><input id="moonInput" type="text" readonly aria-readonly="true" style="min-height:46px;border-radius:12px;border:1px solid light-dark(#ccc,#444);background:light-dark(#f1f1ed,#252525);color:inherit;padding:0 12px;font-size:16px"></label>
+      </div>
+      <div id="conditionsSummary" style="margin-top:14px;padding:13px 15px;border-radius:13px;background:light-dark(#eaeae6,#252525);font-weight:700">Temperature not set · Sunny</div>
+      <div id="weatherAutoNote" style="font-size:12px;opacity:.6;margin-top:9px">Live weather cannot be fetched inside this embedded version; your saved location will carry into backups for the standalone app.</div>
+    </section>
+
+    <section style="margin-top:20px;background:light-dark(#fff,#1d1d1d);border-radius:20px;padding:20px;border:1px solid light-dark(#ddd,#333)">
+      <strong>Workout notes</strong>
+      <div style="font-size:13px;opacity:.6;margin-top:4px">Add anything that might explain how the workout felt or performed.</div>
+      <textarea id="notesInput" rows="3" placeholder="Example: already here 2 hours, tired legs, new shoes..." style="width:100%;box-sizing:border-box;margin-top:12px;border-radius:12px;border:1px solid light-dark(#ccc,#444);background:transparent;color:inherit;padding:12px;font-size:16px;resize:vertical"></textarea>
+    </section>
+
+    <section style="margin-top:20px;background:light-dark(#fff,#1d1d1d);border-radius:20px;padding:20px;border:1px solid light-dark(#ddd,#333)">
+      <strong>Today & this week</strong>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:14px;text-align:center">
+        <div><div style="font-size:12px;opacity:.6">BEST COURSE</div><strong id="bestCourse" style="font-size:24px">—</strong></div>
+        <div><div style="font-size:12px;opacity:.6">AVG COURSE</div><strong id="avgCourse" style="font-size:24px">—</strong></div>
+        <div><div style="font-size:12px;opacity:.6">WEEK DISTANCE</div><strong id="weekDistance" style="font-size:24px">0 mi</strong></div>
+        <div><div style="font-size:12px;opacity:.6">IMPROVEMENT</div><strong id="improvement" style="font-size:24px">—</strong></div>
+      </div>
+    </section>
+
+    <section style="margin-top:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px">
+        <strong>Today's activity</strong>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end"><button id="deleteLastBtn" type="button" style="min-height:44px;padding:0 14px;border-radius:12px;border:1px solid light-dark(#ccc,#444);background:transparent;color:inherit;cursor:pointer">Delete last</button><button id="resetBtn" type="button" style="min-height:44px;padding:0 14px;border-radius:12px;border:1px solid light-dark(#ccc,#444);background:transparent;color:inherit;cursor:pointer">Reset day</button></div>
+      </div>
+      <div id="history" aria-live="polite" style="display:grid;gap:8px"><div id="empty" style="opacity:.55;padding:16px 0">Press Start Run or Start Course when you're ready.</div></div>
+    </section>
+
+    <section style="margin-top:24px;background:light-dark(#fff,#1d1d1d);border-radius:20px;padding:20px;border:1px solid light-dark(#ddd,#333)">
+      <strong>Weekly course progress</strong>
+      <div style="font-size:13px;opacity:.6;margin-top:4px">Your real course results from the last 7 days. Times are shown as minutes:seconds.</div>
+      <div style="overflow-x:auto;margin-top:18px">
+        <svg id="weeklyChart" viewBox="0 0 700 250" role="img" aria-label="Weekly basketball course progress" style="display:block;width:100%;min-width:560px;height:auto">
+          <line x1="58" y1="28" x2="58" y2="205" stroke="currentColor" opacity=".25"/>
+          <line x1="58" y1="205" x2="675" y2="205" stroke="currentColor" opacity=".25"/>
+          <g id="chartDynamic"></g>
+        </svg>
+      </div>
+      <div id="chartMessage" style="font-size:12px;opacity:.6;margin-top:8px">Complete a course to start your real weekly graph.</div>
+    </section>
+
+    <section style="margin-top:20px;background:light-dark(#fff,#1d1d1d);border-radius:20px;padding:20px;border:1px solid light-dark(#ddd,#333)">
+      <strong>Backup & restore</strong>
+      <div style="font-size:13px;opacity:.6;margin-top:4px">Save a backup file to your phone's Files app, then import it later if you change phones or clear your browser.</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button id="exportBtn" type="button" style="min-height:46px;padding:0 16px;border:0;border-radius:12px;background:#5540a8;color:white;font-weight:700;cursor:pointer">Save backup file</button><label style="min-height:46px;display:inline-flex;align-items:center;padding:0 16px;border-radius:12px;border:1px solid light-dark(#ccc,#444);cursor:pointer;font-weight:700">Restore backup<input id="importInput" type="file" accept="application/json,.json" style="display:none"></label></div>
+      <div id="backupStatus" aria-live="polite" style="font-size:13px;opacity:.7;margin-top:10px"></div>
+    </section>
+  </div>
+<script>
+(()=>{
+ const root=document.getElementById('fitnessTracker'); if(root.dataset.ready)return; root.dataset.ready='1';
+ const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+ const state={run:{start:null,timer:null,running:false},course:{start:null,timer:null,running:false},runs:0,courses:0,entries:[],days:{},activeDay:todayKey(),activeTimers:{run:null,course:null}};
+ const fmt=ms=>{ms=Math.max(0,ms);const m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000),cs=Math.floor(ms%1000/10);return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+'.'+String(cs).padStart(2,'0')};
+ function persistActiveTimers(){
+  try{localStorage.setItem('runCourseTrackerActiveTimers',JSON.stringify(state.activeTimers));}catch(e){}
+ }
+ function updateActiveBanner(){
+  const banner=document.getElementById('activeTimerBanner');
+  const active=[];
+  ['run','course'].forEach(kind=>{const started=state.activeTimers[kind];if(started){active.push((kind==='run'?'RUN':'COURSE')+' IN PROGRESS — '+fmt(Date.now()-started));}});
+  if(active.length){banner.style.display='block';banner.textContent=active.join('   •   ');}else{banner.style.display='none';banner.textContent='';}
+ }
+ function startTicker(kind,buttonId,timeId){
+  const btn=document.getElementById(buttonId),display=document.getElementById(timeId),obj=state[kind];
+  clearInterval(obj.timer);
+  obj.running=true;obj.start=state.activeTimers[kind];
+  btn.textContent='STOP '+kind.toUpperCase();btn.style.background='#a63232';
+  const tick=()=>{const elapsed=Math.max(0,Date.now()-obj.start);display.textContent=fmt(elapsed);updateActiveBanner();};
+  tick();obj.timer=setInterval(tick,50);
+ }
+ function stopTimer(kind,buttonId,timeId){
+  const btn=document.getElementById(buttonId),display=document.getElementById(timeId),obj=state[kind];
+  const started=state.activeTimers[kind]||obj.start;
+  const elapsed=Math.max(0,Date.now()-started);
+  clearInterval(obj.timer);obj.running=false;obj.start=null;state.activeTimers[kind]=null;persistActiveTimers();
+  display.textContent=fmt(elapsed);btn.textContent='START '+kind.toUpperCase();btn.style.background=kind==='run'?'#287a43':'#275da8';updateActiveBanner();addResult(kind,elapsed);
+ }
+ function setup(kind,buttonId,timeId){
+  const btn=document.getElementById(buttonId),display=document.getElementById(timeId),obj=state[kind];
+  btn.addEventListener('click',()=>{
+   if(!obj.running){state.activeTimers[kind]=Date.now();persistActiveTimers();startTicker(kind,buttonId,timeId);}
+   else stopTimer(kind,buttonId,timeId);
+  });
+ }
+ function restoreActiveTimers(){
+  try{const saved=JSON.parse(localStorage.getItem('runCourseTrackerActiveTimers')||'null');if(saved&&typeof saved==='object'){['run','course'].forEach(kind=>{const v=Number(saved[kind]);state.activeTimers[kind]=Number.isFinite(v)&&v>0?v:null;});}}catch(e){}
+  if(state.activeTimers.run)startTicker('run','runBtn','runTime');
+  if(state.activeTimers.course)startTicker('course','courseBtn','courseTime');
+  updateActiveBanner();
+ }
+ function moonPhaseFor(date){const synodic=29.53058867,knownNew=Date.UTC(2000,0,6,18,14,0),age=((((date.getTime()-knownNew)/86400000)%synodic)+synodic)%synodic),index=Math.floor((age/synodic)*8+0.5)%8;return ['🌑 New Moon','🌒 Waxing Crescent','🌓 First Quarter','🌔 Waxing Gibbous','🌕 Full Moon','🌖 Waning Gibbous','🌗 Last Quarter','🌘 Waning Crescent'][index];}
+ function currentDay(){if(!state.days[state.activeDay])state.days[state.activeDay]={entries:[],location:'',temperature:'',weather:'Sunny',moon:moonPhaseFor(new Date()),notes:''};return state.days[state.activeDay];}
+ function syncDay(){const day=currentDay();day.entries=state.entries;day.location=locationInput.value;day.temperature=temperatureInput.value;day.weather=weatherInput.value;day.moon=moonInput.value;day.notes=notesInput.value;}
+ function saveState(){
+  syncDay();try{localStorage.setItem('runCourseTracker',JSON.stringify({days:state.days,activeDay:state.activeDay}));}catch(e){}
+ }
+ function loadDay(){const day=currentDay();state.entries=Array.isArray(day.entries)?day.entries:[];state.runs=state.entries.filter(e=>e.kind==='run').length;state.courses=state.entries.filter(e=>e.kind==='course').length;locationInput.value=day.location??'';temperatureInput.value=day.temperature??'';weatherInput.value=day.weather||'Sunny';moonInput.value=moonPhaseFor(new Date());day.moon=moonInput.value;notesInput.value=day.notes||'';document.getElementById('runCount').textContent=state.runs;document.getElementById('courseCount').textContent=state.courses;document.getElementById('distance').textContent=(state.runs*744).toLocaleString()+' ft';renderHistory();updateConditions(false);renderStats();renderChart();}
+ function renderHistory(){
+  const history=document.getElementById('history');history.innerHTML='';
+  if(!state.entries.length){history.innerHTML='<div id="empty" style="opacity:.55;padding:16px 0">Press Start Run or Start Course when you\'re ready.</div>';return;}
+  [...state.entries].reverse().forEach(entry=>{
+   const row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;gap:12px;padding:13px 15px;border-radius:13px;background:light-dark(#eaeae6,#252525)';
+   const label=entry.kind==='run'?'Run · 744 ft':'Basketball course';row.innerHTML='<strong>'+label+'</strong><span style="font-variant-numeric:tabular-nums">'+fmt(entry.elapsed)+'</span>';history.appendChild(row);
+  });
+ }
+ function addResult(kind,elapsed){
+  document.getElementById('empty')?.remove();
+  if(kind==='run'){state.runs++;document.getElementById('runCount').textContent=state.runs;const ft=state.runs*744;document.getElementById('distance').textContent=ft.toLocaleString()+' ft';}
+  else{state.courses++;document.getElementById('courseCount').textContent=state.courses;}
+  state.entries.push({kind,elapsed,createdAt:new Date().toISOString(),date:state.activeDay});renderHistory();saveState();renderStats();renderChart();
+ }
+ setup('run','runBtn','runTime');setup('course','courseBtn','courseTime');
+ const locationInput=document.getElementById('locationInput'),temperatureInput=document.getElementById('temperatureInput'),weatherInput=document.getElementById('weatherInput'),moonInput=document.getElementById('moonInput'),conditionsSummary=document.getElementById('conditionsSummary'),notesInput=document.getElementById('notesInput');
+ moonInput.value=moonPhaseFor(new Date());
+ function updateConditions(doSave=true){const raw=Number(temperatureInput.value),temp=Number.isFinite(raw)&&temperatureInput.value!==''?Math.max(-100,Math.min(150,raw))+'°F':'Temperature not set',place=locationInput.value.trim()?locationInput.value.trim()+' · ':'';conditionsSummary.textContent=place+temp+' · '+weatherInput.value+' · '+moonInput.value;if(doSave)saveState();}
+ [locationInput,temperatureInput,weatherInput,notesInput].forEach(el=>el.addEventListener('input',()=>{updateConditions(el!==notesInput);if(el===notesInput)saveState();}));
+ function renderStats(){const course=state.entries.filter(e=>e.kind==='course').map(e=>e.elapsed);document.getElementById('bestCourse').textContent=course.length?fmt(Math.min(...course)):'—';document.getElementById('avgCourse').textContent=course.length?fmt(course.reduce((a,b)=>a+b,0)/course.length):'—';const cutoff=Date.now()-7*86400000;let weekRuns=0,allCourse=[];Object.values(state.days).forEach(d=>{(d.entries||[]).forEach(e=>{const t=Date.parse(e.createdAt||'');if(t>=cutoff){if(e.kind==='run')weekRuns++;if(e.kind==='course')allCourse.push(e);}})});document.getElementById('weekDistance').textContent=((weekRuns*744)/5280).toFixed(2)+' mi';allCourse.sort((a,b)=>Date.parse(a.createdAt)-Date.parse(b.createdAt));if(allCourse.length>1){const delta=allCourse[0].elapsed-allCourse[allCourse.length-1].elapsed;document.getElementById('improvement').textContent=(delta>=0?'-':'+' )+fmt(Math.abs(delta));}else document.getElementById('improvement').textContent='—';}
+ function renderChart(){const cutoff=Date.now()-7*86400000,pts=[];Object.entries(state.days).forEach(([date,d])=>(d.entries||[]).filter(e=>e.kind==='course'&&Date.parse(e.createdAt)>=cutoff).forEach(e=>pts.push({date,elapsed:e.elapsed,createdAt:e.createdAt})));pts.sort((a,b)=>Date.parse(a.createdAt)-Date.parse(b.createdAt));const g=document.getElementById('chartDynamic'),msg=document.getElementById('chartMessage');g.innerHTML='';if(!pts.length){msg.textContent='Complete a course to start your real weekly graph.';return;}const values=pts.map(p=>p.elapsed),min=Math.min(...values),max=Math.max(...values),pad=Math.max(10000,(max-min)*.2),lo=min-pad,hi=max+pad;const x=i=>70+(588*(pts.length===1?.5:i/(pts.length-1))),y=v=>40+155*((v-lo)/(hi-lo));const ns='http://www.w3.org/2000/svg';const line=document.createElementNS(ns,'polyline');line.setAttribute('points',pts.map((p,i)=>x(i)+','+y(p.elapsed)).join(' '));line.setAttribute('fill','none');line.setAttribute('stroke','currentColor');line.setAttribute('stroke-width','4');line.setAttribute('stroke-linecap','round');line.setAttribute('stroke-linejoin','round');g.appendChild(line);pts.forEach((p,i)=>{const c=document.createElementNS(ns,'circle');c.setAttribute('cx',x(i));c.setAttribute('cy',y(p.elapsed));c.setAttribute('r','6');c.setAttribute('fill','currentColor');g.appendChild(c);const t=document.createElementNS(ns,'text');t.setAttribute('x',x(i));t.setAttribute('y',Math.max(18,y(p.elapsed)-12));t.setAttribute('text-anchor','middle');t.setAttribute('fill','currentColor');t.setAttribute('font-size','11');t.setAttribute('font-weight','700');t.textContent=fmt(p.elapsed).slice(0,5);g.appendChild(t);const d=document.createElementNS(ns,'text');d.setAttribute('x',x(i));d.setAttribute('y','226');d.setAttribute('text-anchor','middle');d.setAttribute('fill','currentColor');d.setAttribute('font-size','11');const parts=p.date.split('-');d.textContent=Number(parts[1])+'/'+Number(parts[2]);g.appendChild(d);});msg.textContent='Lower on the graph means a faster course time.';}
+ try{const saved=JSON.parse(localStorage.getItem('runCourseTracker')||'null');if(saved?.days)state.days=saved.days;else if(saved){state.days[state.activeDay]={entries:Array.isArray(saved.entries)?saved.entries:[],location:saved.location??'',temperature:saved.temperature??'',weather:saved.weather||'Sunny',moon:moonPhaseFor(new Date()),notes:''};}}catch(e){}
+ loadDay();
+ restoreActiveTimers();
+ document.getElementById('deleteLastBtn').addEventListener('click',()=>{if(!state.entries.length)return;state.entries.pop();state.runs=state.entries.filter(e=>e.kind==='run').length;state.courses=state.entries.filter(e=>e.kind==='course').length;document.getElementById('runCount').textContent=state.runs;document.getElementById('courseCount').textContent=state.courses;document.getElementById('distance').textContent=(state.runs*744).toLocaleString()+' ft';renderHistory();saveState();renderStats();renderChart();});
+ document.getElementById('exportBtn').addEventListener('click',()=>{saveState();const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),days:state.days},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='run-course-tracker-backup-'+state.activeDay+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);document.getElementById('backupStatus').textContent='Backup created. On iPhone, use the share/download controls to save it in Files.';});
+ document.getElementById('importInput').addEventListener('change',async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data||typeof data.days!=='object')throw new Error('Invalid');state.days=data.days;state.activeDay=todayKey();loadDay();saveState();document.getElementById('backupStatus').textContent='Backup restored successfully.';}catch(err){document.getElementById('backupStatus').textContent='That file could not be restored.';}e.target.value='';});
+ document.getElementById('resetBtn').addEventListener('click',()=>{['run','course'].forEach(k=>{clearInterval(state[k].timer);state[k].running=false;state[k].start=null;state.activeTimers[k]=null});persistActiveTimers();updateActiveBanner();state.runs=0;state.courses=0;state.entries=[];document.getElementById('runCount').textContent='0';document.getElementById('courseCount').textContent='0';document.getElementById('distance').textContent='0 ft';document.getElementById('runTime').textContent='00:00.00';document.getElementById('courseTime').textContent='00:00.00';document.getElementById('runBtn').textContent='START RUN';document.getElementById('courseBtn').textContent='START COURSE';document.getElementById('runBtn').style.background='#287a43';document.getElementById('courseBtn').style.background='#275da8';renderHistory();saveState();});
+ setInterval(()=>{const now=todayKey();if(now!==state.activeDay){saveState();state.activeDay=now;loadDay();}},60000);
+})();
+</script></div>
